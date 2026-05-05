@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+title: "rag-threat-intel: A sovereign RAG pipeline for vulnerability and threat-intelligence Q&A"
+message: "If you use this work, please cite it as below."
+authors:
+  - family-names: Bhutto
+    given-names: Ali Murtaza
+    orcid: "https://orcid.org/0009-0007-2787-943X"
+type: software
+license: MIT
+repository-code: "https://github.com/thunderstornX/rag-threat-intel"
+version: "1.0.0"
+date-released: "2026-05-03"
+doi: "10.5281/zenodo.XXXXXXX"
+keywords:
+  - retrieval-augmented generation
+  - RAG
+  - threat intelligence
+  - sovereign AI
+  - pgvector
+  - NVD
+  - CVE
+  - chunking
+  - faithfulness

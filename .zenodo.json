@@ -1,0 +1,35 @@
+{
+  "title": "rag-threat-intel: A sovereign RAG pipeline for vulnerability and threat-intelligence Q&A",
+  "description": "An on-premise RAG (retrieval-augmented generation) pipeline that ingests NIST NVD CVE feeds and public security PDFs into pgvector, then answers natural-language questions using Ollama-served LLMs with mandatory source citations. Compares three chunking strategies (fixed-size 512+50 overlap, semantic heading-aware, sentence-window ±2) and two embedding models on real measured MRR@5, MRR@10, and a faithfulness metric over a 50-question evaluation set.",
+  "creators": [
+    {
+      "name": "Bhutto, Ali Murtaza",
+      "orcid": "0009-0007-2787-943X",
+      "affiliation": "Independent Researcher"
+    }
+  ],
+  "license": "MIT",
+  "keywords": [
+    "retrieval-augmented generation",
+    "RAG",
+    "threat intelligence",
+    "sovereign AI",
+    "pgvector",
+    "NVD",
+    "CVE",
+    "chunking",
+    "MRR",
+    "faithfulness"
+  ],
+  "communities": [
+    {"identifier": "ai-safety"}
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/thunderstornX/rag-threat-intel",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ],
+  "upload_type": "software"
+}

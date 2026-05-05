@@ -1,0 +1,12 @@
+[project]
+name = "rag-threat-intel"
+version = "1.0.0"
+description = "Sovereign RAG pipeline for vulnerability and threat-intelligence Q&A."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [{name = "Ali Murtaza Bhutto"}]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
