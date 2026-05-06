@@ -3,6 +3,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX) <!-- DOI placeholder; replaced on first Zenodo deposit -->
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-40%20passing-brightgreen)](#tests)
+[![MRR@10](https://img.shields.io/badge/MRR%4010-0.83%20semantic-blue)](#real-measured-eval)
 [![Stack](https://img.shields.io/badge/stack-Ollama%20%2B%20pgvector%20%2B%20FastAPI-blue)](#stack)
 
 ![banner](paper/figures/banner.png)
@@ -19,9 +20,50 @@ the model is told to refuse.
 > **good** is a separate question — and that's what the eval is for.
 
 The point of this repo isn't a "magic Q&A box". It's a **measured
-comparison** between three chunking strategies and two embedding
-models on a 50-question evaluation set, with MRR@5 / MRR@10 and a
-faithfulness metric reported.
+comparison** between three chunking strategies on a real
+evaluation set, with MRR@5 / MRR@10 and a three-axis faithfulness
+metric reported. Numbers below are from a real local run, not
+fabricated — see [`results/README.md`](results/README.md) for the
+reproduction recipe.
+
+---
+
+<a id="real-measured-eval"></a>
+## Real measured eval (v1.0.0)
+
+Corpus: 7 named historical CVEs (Log4Shell, Heartbleed, Apache
+Struts, BlueKeep, Zerologon, Spring4Shell, regreSSHion) + 30 recent
+CVE records, embedded with `all-minilm` (384-d).
+
+### MRR over 14 CVE-recall queries
+
+| Strategy           | MRR@5  | MRR@10 | mean latency |
+|--------------------|-------:|-------:|-------------:|
+| fixed_size         | 0.768  | 0.780  | 39.9 ms      |
+| **semantic**       | **0.821** | **0.833** | 42.2 ms |
+| sentence_window    | 0.762  | 0.762  | 40.4 ms      |
+
+**Semantic wins by ~5 percentage points.** Sentence-window
+underperforms because each CVE is short (one description per
+record); ±N-neighbour context buys little when the parent Document
+is itself a paragraph.
+
+### Faithfulness, semantic strategy, llama3.2:1b, n=12
+
+| Signal                    | Value     |
+|---------------------------|----------:|
+| mean citation density     | 0.201     |
+| **mean citation validity**| **1.000** |
+| mean refusal honesty      | 0.333     |
+| mean wall-clock / query   | 53.4 s    |
+
+The honest read: the 1B model under our strict citation contract
+**chooses to refuse rather than risk an uncited claim**. 8 of 12
+queries received the canonical refusal even though the retriever
+returned relevant chunks. When it engaged, citation validity was
+perfect (zero invented `[doc_N]` tags). This is exactly the
+trade-off the three-axis scorer is designed to surface — a single
+number would have hidden it.
 
 ---
 
