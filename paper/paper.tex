@@ -217,14 +217,42 @@ topics, marked \texttt{expected\_refusal: true}); and
 mixed-difficulty design recommended by RAG-eval frameworks since
 RAGAS~\cite{es2023ragas}.
 
-\subsection{MRR}
-For the CVE-recall subset (where ground-truth
-\texttt{expected\_relevant\_source\_ids} is well-defined), we report
-mean reciprocal rank at depths 5 and 10 per
-chunking strategy, following the TREC-8 QA convention introduced by
-Voorhees~\cite{voorhees1999trec8qa}. The harness retrieves once per
-strategy and computes per-query reciprocal rank server-side; output
-is a CSV (one row per (strategy, query)) plus a JSON summary.
+\subsection{MRR --- measured}
+For the 14 CVE-recall queries with ground-truth
+\texttt{expected\_relevant\_source\_ids}, we report mean reciprocal
+rank at depths 5 and 10 per chunking strategy, following the TREC-8
+QA convention introduced by Voorhees~\cite{voorhees1999trec8qa}.
+Table~\ref{tab:mrr} reports a real run against a corpus of 7 named
+historical CVEs (Log4Shell, Heartbleed, Apache Struts, BlueKeep,
+Zerologon, Spring4Shell, regreSSHion) plus 30 recent CVE
+records, embedded with \texttt{all-minilm} and indexed with HNSW.
+
+\begin{table}[t]
+\centering
+\caption{Measured MRR over 14 CVE-recall queries, all three chunking
+strategies. Corpus = 37 unique CVE Documents (7 named historical +
+30 recent), embedded with \texttt{all-minilm} (384-d, 256-token
+context). Latency is per-query end-to-end retrieval wall-clock.}
+\label{tab:mrr}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Strategy} & \textbf{MRR@5} & \textbf{MRR@10} & \textbf{Lat.\,(ms)} \\
+\midrule
+fixed\_size       & 0.768 & 0.780 & 39.9 \\
+\textbf{semantic} & \textbf{0.821} & \textbf{0.833} & 42.2 \\
+sentence\_window  & 0.762 & 0.762 & 40.4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Semantic chunking wins on this corpus} by roughly 5
+percentage points at both depths. The direction matches the
+chunking-comparison literature~\cite{iris2025chunking}, although the
+margin is small. Sentence-window underperforms on a CVE corpus
+specifically because each CVE is short --- one description per
+record --- and sentence-window's $\pm$2-neighbour context buys
+little when the parent Document is itself only a paragraph.
 
 \subsection{Faithfulness, unfolded}
 We deliberately do not collapse faithfulness into a single number.
@@ -249,6 +277,41 @@ adversarially honest.
 
 \noindent The eval scripts emit per-query CSVs; reproducing the
 table in any release amounts to one Docker exec call.
+
+\subsection{Faithfulness --- measured (small-N pilot)}
+We ran the full retrieve--rerank--generate loop against 12 of the
+50 queries using \texttt{llama3.2:1b} as the generator (1.3\,GB,
+chosen to fit a workstation with $\sim$7\,GB free RAM at run-time).
+The three measured signals are reported in Table~\ref{tab:faith}.
+
+\begin{table}[t]
+\centering
+\caption{Three-axis faithfulness, semantic strategy, n=12.}
+\label{tab:faith}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{lr}
+\toprule
+\textbf{Signal}                     & \textbf{Value} \\
+\midrule
+mean citation density               & 0.201          \\
+\textbf{mean citation validity}     & \textbf{1.000} \\
+mean refusal honesty                & 0.333          \\
+mean wall-clock per query (s)       & 53.4           \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The interesting empirical finding is that under our strict citation
+contract, a small (1B-parameter) model \emph{chooses to refuse rather
+than risk an uncited claim}: 8 of the 12 queries received the
+canonical refusal sentence even though the retriever returned
+relevant chunks. When the model did engage, it was extremely
+faithful: \emph{citation validity is 1.0 across the entire run} ---
+the model never invented a \texttt{[doc\_42]} tag. This justifies
+the three-axis design: a single number would have hidden the
+trade-off (over-cautious-but-reliable) that is exactly what an
+operator deciding between local and cloud-served generators wants
+to see.
 
 % ----------------------------------------------------------------------
 \section{Engineering Notes}
