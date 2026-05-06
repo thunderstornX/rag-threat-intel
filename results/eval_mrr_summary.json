@@ -1,0 +1,25 @@
+{
+  "by_strategy": {
+    "fixed_size": {
+      "n_queries": 14,
+      "mrr_at_5": 0.7679,
+      "mrr_at_10": 0.7798,
+      "mean_latency_ms": 39.9,
+      "errors": 0
+    },
+    "semantic": {
+      "n_queries": 14,
+      "mrr_at_5": 0.8214,
+      "mrr_at_10": 0.8333,
+      "mean_latency_ms": 42.2,
+      "errors": 0
+    },
+    "sentence_window": {
+      "n_queries": 14,
+      "mrr_at_5": 0.7619,
+      "mrr_at_10": 0.7619,
+      "mean_latency_ms": 40.4,
+      "errors": 0
+    }
+  }
+}

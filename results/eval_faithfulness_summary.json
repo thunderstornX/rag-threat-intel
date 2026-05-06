@@ -1,0 +1,11 @@
+{
+  "n_queries": 12,
+  "strategy": "semantic",
+  "mean_citation_density": 0.201,
+  "mean_citation_validity": 1.0,
+  "mean_refusal_honesty": 0.333,
+  "refusal_count": 8,
+  "expected_refusal_count": 0,
+  "mean_elapsed_ms": 53433.7,
+  "errors": 0
+}
