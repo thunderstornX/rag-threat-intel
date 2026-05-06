@@ -30,7 +30,21 @@ from rich.progress import (  # noqa: E402
 from config import get_settings  # noqa: E402
 from embeddings.embed import OllamaEmbedder  # noqa: E402
 from ingest.chunker import ChunkStrategy, chunk_documents  # noqa: E402
-from ingest.nvd_fetcher import fetch_recent_cves  # noqa: E402
+from ingest.nvd_fetcher import fetch_cves_by_ids, fetch_recent_cves  # noqa: E402
+
+
+# CVEs the eval set references explicitly. Seeding these by ID makes
+# the MRR scores meaningful even on a small corpus where the recent-N
+# crawl wouldn't otherwise pick them up.
+_NAMED_HISTORICAL_CVES = [
+    "CVE-2021-44228",   # Log4Shell
+    "CVE-2014-0160",    # Heartbleed
+    "CVE-2017-5638",    # Apache Struts (Equifax)
+    "CVE-2019-0708",    # BlueKeep
+    "CVE-2020-1472",    # Zerologon
+    "CVE-2022-22965",   # Spring4Shell
+    "CVE-2024-6387",    # regreSSHion
+]
 from ingest.pdf_loader import load_all_pdfs  # noqa: E402
 from retrieval.store import PgVectorStore  # noqa: E402
 
@@ -46,6 +60,9 @@ def main(argv=None) -> int:
     p.add_argument("--cve-limit", type=int, default=None,
                     help="override settings.nvd_initial_cve_count")
     p.add_argument("--no-cves", action="store_true")
+    p.add_argument("--no-named-historical", action="store_true",
+                    help="skip the seed of well-known historical CVEs "
+                         "(Log4Shell, Heartbleed, BlueKeep, etc.)")
     p.add_argument("--no-pdfs", action="store_true")
     args = p.parse_args(argv)
 
@@ -54,16 +71,24 @@ def main(argv=None) -> int:
 
     # ---- gather documents ------------------------------------------
     docs = []
+    if not args.no_named_historical:
+        console.rule("[bold cyan]named historical CVEs[/]")
+        named = fetch_cves_by_ids(settings, _NAMED_HISTORICAL_CVES)
+        console.print(f"  fetched [bold]{len(named)}[/] named CVEs")
+        docs.extend(named)
     if not args.no_cves and cve_limit > 0:
-        console.rule("[bold cyan]CVE ingest[/]")
+        console.rule("[bold cyan]recent CVE ingest[/]")
         with Progress(SpinnerColumn(), TextColumn("[bold]{task.description}[/]"),
                        BarColumn(), TextColumn("[dim]{task.completed}/{task.total}[/]"),
                        TimeElapsedColumn(), console=console) as p_:
             t = p_.add_task(description="fetching CVEs", total=cve_limit)
+            n_new = 0
             for d in fetch_recent_cves(settings, limit=cve_limit):
-                docs.append(d)
+                if not any(d.source_id == ex.source_id for ex in docs):
+                    docs.append(d)
+                    n_new += 1
                 p_.advance(t)
-        console.print(f"  fetched [bold]{len(docs)}[/] CVE documents")
+        console.print(f"  added [bold]{n_new}[/] new CVE documents (deduped)")
     if not args.no_pdfs:
         pdf_docs = load_all_pdfs(_REPO / "corpus" / "pdfs")
         console.print(f"  loaded [bold]{len(pdf_docs)}[/] PDF page documents")

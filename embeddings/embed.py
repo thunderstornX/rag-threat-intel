@@ -30,13 +30,25 @@ class EmbedResult:
 
 class OllamaEmbedder:
     """Sync embedder. The pipeline runs ingest as a one-shot script,
-    not a service — async would be busywork."""
+    not a service — async would be busywork.
+
+    Embedding models have widely different context windows
+    (all-minilm: 256 tokens, nomic-embed-text: 8192). We defensively
+    truncate inputs to a configurable char budget so the chunker can
+    target an LLM-shaped window (~512 tokens / 2KB chars) and the
+    embedder still returns a vector for every input, even when the
+    operator picks a small embedding model. Truncation only affects
+    embedding; the chunk's full text is what's stored and returned
+    to the generator.
+    """
 
     def __init__(self, *, base_url: str, model: str,
                  timeout_s: float = 60.0,
+                 max_input_chars: int = 600,
                  client: httpx.Client | None = None):
         self.base_url = base_url.rstrip("/")
         self.model = model
+        self.max_input_chars = max_input_chars
         self._client = client or httpx.Client(timeout=timeout_s)
         self._owns = client is None
 
@@ -51,7 +63,8 @@ class OllamaEmbedder:
         url = f"{self.base_url}/api/embeddings"
         started = time.monotonic()
         vectors: list[list[float]] = []
-        for t in texts:
+        for raw in texts:
+            t = raw[:self.max_input_chars] if len(raw) > self.max_input_chars else raw
             try:
                 r = self._client.post(url, json={"model": self.model,
                                                    "prompt": t})
