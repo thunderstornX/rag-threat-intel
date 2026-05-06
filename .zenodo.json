@@ -1,6 +1,6 @@
 {
   "title": "rag-threat-intel: A sovereign RAG pipeline for vulnerability and threat-intelligence Q&A",
-  "description": "An on-premise RAG (retrieval-augmented generation) pipeline that ingests NIST NVD CVE feeds and public security PDFs into pgvector, then answers natural-language questions using Ollama-served LLMs with mandatory source citations. Compares three chunking strategies (fixed-size 512+50 overlap, semantic heading-aware, sentence-window ±2) and two embedding models on real measured MRR@5, MRR@10, and a faithfulness metric over a 50-question evaluation set.",
+  "description": "An on-premise RAG (retrieval-augmented generation) pipeline that ingests NIST NVD CVE feeds and public security PDFs into pgvector, then answers natural-language questions using Ollama-served LLMs with mandatory source citations. Compares three chunking strategies (fixed-size 512+50 overlap, semantic heading-aware, sentence-window ±2) on real measured MRR@5 and MRR@10 over a 14-query CVE-recall subset, plus a three-axis faithfulness pilot (citation density / validity / refusal honesty) on a 12-query subsample, of a 50-question evaluation set. Embedding done with Ollama all-minilm; an embed_compare harness for nomic-embed-text vs all-minilm is included but its numbers are not in this release.",
   "creators": [
     {
       "name": "Bhutto, Ali Murtaza",

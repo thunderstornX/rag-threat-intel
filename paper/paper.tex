@@ -36,10 +36,12 @@ Ollama-served Llama~3.2 model under a system prompt that requires
 every claim to cite a \texttt{[doc\_N]} tag from the retrieved set.
 The repository's central experiment compares three chunking
 strategies (fixed-size with overlap, heading-aware semantic,
-sentence-window with $\pm$2 neighbours) on a curated 50-question
-evaluation set, reporting MRR@5 / MRR@10~\cite{voorhees1999trec8qa}
-and a three-axis faithfulness signal (citation density, citation
-validity, refusal honesty) inspired by recent RAG-evaluation
+sentence-window with $\pm$2 neighbours) drawn from a curated
+50-question evaluation set, reporting MRR@5 / MRR@10
+\cite{voorhees1999trec8qa} over a 14-query CVE-recall subset (where
+ground-truth source IDs are well-defined) and a three-axis
+faithfulness pilot (citation density, citation validity, refusal
+honesty) over a 12-query subsample, inspired by recent RAG-evaluation
 work~\cite{es2023ragas,iris2025chunking}. Source, evaluation
 harness, Docker stack, and pre-computed run artefacts are released
 under the MIT licence.
