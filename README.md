@@ -1,6 +1,6 @@
 # rag-threat-intel
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX) <!-- DOI placeholder; replaced on first Zenodo deposit -->
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20480465.svg)](https://doi.org/10.5281/zenodo.20480465) <!-- DOI placeholder; replaced on first Zenodo deposit -->
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-40%20passing-brightgreen)](#tests)
 [![MRR@10](https://img.shields.io/badge/MRR%4010-0.83%20semantic-blue)](#real-measured-eval)
@@ -263,13 +263,13 @@ finding the test set is supposed to catch.
   title     = {rag-threat-intel: A sovereign RAG pipeline for vulnerability
                and threat-intelligence Q\&A},
   year      = {2026},
-  doi       = {10.5281/zenodo.XXXXXXX},
+  doi       = {10.5281/zenodo.20480465},
   url       = {https://github.com/thunderstornX/rag-threat-intel},
   orcid     = {0009-0007-2787-943X}
 }
 ```
 
-> **Note:** the DOI placeholder `XXXXXXX` is replaced on first Zenodo
+> **Note:** the DOI placeholder `20480465` is replaced on first Zenodo
 > deposit.
 
 Related work in the same portfolio:

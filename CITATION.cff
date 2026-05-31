@@ -9,8 +9,15 @@ type: software
 license: MIT
 repository-code: "https://github.com/thunderstornX/rag-threat-intel"
 version: "1.0.0"
-date-released: "2026-05-03"
-doi: "10.5281/zenodo.XXXXXXX"
+date-released: "2026-06-01"
+doi: "10.5281/zenodo.20480466"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.20480465"
+    description: "Concept DOI (always resolves to the latest version)"
+  - type: doi
+    value: "10.5281/zenodo.20480466"
+    description: "Version DOI"
 keywords:
   - retrieval-augmented generation
   - RAG
