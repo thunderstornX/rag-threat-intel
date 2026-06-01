@@ -269,8 +269,9 @@ finding the test set is supposed to catch.
 }
 ```
 
-> **Note:** the DOI placeholder `20480465` is replaced on first Zenodo
-> deposit.
+> The DOI above is the **concept DOI** — it always resolves to the latest
+> release. Version 1.0.0 is archived at
+> [10.5281/zenodo.20480466](https://doi.org/10.5281/zenodo.20480466).
 
 Related work in the same portfolio:
 - [`agentic-osint-agent`](https://github.com/thunderstornX/agentic-osint-agent) — LangGraph ReAct OSINT investigator (uses the same eval-discipline / no-LLM-judge philosophy)
