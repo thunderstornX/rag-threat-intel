@@ -1,6 +1,6 @@
 # rag-threat-intel
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20480465.svg)](https://doi.org/10.5281/zenodo.20480465) <!-- DOI placeholder; replaced on first Zenodo deposit -->
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20480465.svg)](https://doi.org/10.5281/zenodo.20480465)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-40%20passing-brightgreen)](#tests)
 [![MRR@10](https://img.shields.io/badge/MRR%4010-0.83%20semantic-blue)](#real-measured-eval)
