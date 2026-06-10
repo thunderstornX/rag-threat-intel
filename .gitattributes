@@ -1,0 +1,5 @@
+# LaTeX paper sources are documentation, not project code
+*.tex linguist-documentation
+*.bib linguist-documentation
+*.cls linguist-vendored
+*.bst linguist-vendored
